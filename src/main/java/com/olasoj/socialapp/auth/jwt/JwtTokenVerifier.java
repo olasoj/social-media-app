@@ -116,7 +116,9 @@ public class JwtTokenVerifier extends OncePerRequestFilter {
     protected boolean shouldNotFilter(@NonNull HttpServletRequest request) {
         //Has bugs; implement yours
 
-        return true;//requestMatchers.stream().anyMatch(requestMatcher -> requestMatcher.matches(request));
+        return
+//                true;
+        requestMatchers.stream().anyMatch(requestMatcher -> requestMatcher.matches(request));
     }
 
 }

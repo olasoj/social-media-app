@@ -50,7 +50,7 @@ public class DefaultPostService implements PostService {
     @Transactional
     public GenericPostResult editPost(Long postId, EditPostRequest editPostRequest, BlogUserPrincipal blogUserPrincipal) {
 
-        Assert.notNull(postId, "BlogId cannot be null");
+        Assert.notNull(postId, "PostId cannot be null");
         Assert.notNull(editPostRequest, "EditBlogPostRequest cannot be null");
         Assert.notNull(blogUserPrincipal, BLOG_USER_PRINCIPAL_CANNOT_BE_NULL);
 
