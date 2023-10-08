@@ -8,7 +8,7 @@ import org.springframework.util.Assert;
 import java.util.Collection;
 import java.util.stream.Collectors;
 
-public record BlogUserPrincipal(User user) implements UserDetails {
+public record BlogUserPrincipal(User user, Long accountId) implements UserDetails {
     public BlogUserPrincipal {
         Assert.notNull(user, "User cannot be null");
     }

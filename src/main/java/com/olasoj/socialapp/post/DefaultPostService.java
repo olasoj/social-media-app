@@ -34,7 +34,7 @@ public class DefaultPostService implements PostService {
         Post post = Post.builder()
                 .content(createPostRequest.content())
                 .likeCount(0)
-                .socialMediaAccountId(2L) //TODO fix me
+                .socialMediaAccountId(blogUserPrincipal.accountId())
                 .build();
 
         boolean saveBlogPost = postRepository.saveBlogPost(post);

@@ -18,6 +18,9 @@ public class RegistrationRequest {
         this.createUserRequest = createUserRequest;
     }
 
+    public RegistrationRequest() {
+    }
+
     public CreateUserRequest getCreateUserRequest() {
         return createUserRequest;
     }

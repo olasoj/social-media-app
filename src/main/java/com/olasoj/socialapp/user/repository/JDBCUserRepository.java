@@ -95,26 +95,29 @@ public class JDBCUserRepository implements UserRepository {
 
         static final UserRowMapper userRowMapper = new UserRowMapper();
 
+        public static BlogUser getBlogUser(ResultSet rs) throws SQLException {
+            return BlogUser.builder()
+                    .userId(rs.getLong("user_id"))
+                    .username(rs.getString("username"))
+                    .email(rs.getString("email"))
+                    .password(rs.getString("password"))
+
+                    .createdAt(DBTimeUtils.getInstant(rs, "created_at"))
+                    .updatedAt(DBTimeUtils.getInstant(rs, ("updated_at")))
+                    .createdBy(rs.getString("created_by"))
+                    .updatedBy(rs.getString("updated_by"))
+
+                    .profilePhoto(rs.getString("profile_picture"))
+                    .version(rs.getInt("version"))
+
+                    .accessControlList(List.of(Role.WRITE, Role.READ))
+                    .build();
+        }
 
         public User mapRow(ResultSet rs, int rowNum) throws SQLException {
 
             if (rs.next()) {
-                return BlogUser.builder()
-                        .userId(rs.getLong("user_id"))
-                        .username(rs.getString("username"))
-                        .email(rs.getString("email"))
-                        .password(rs.getString("password"))
-
-                        .createdAt(DBTimeUtils.getInstant(rs, "created_at"))
-                        .updatedAt(DBTimeUtils.getInstant(rs, ("updated_at")))
-                        .createdBy(rs.getString("created_by"))
-                        .updatedBy(rs.getString("updated_by"))
-
-                        .profilePhoto(rs.getString("profile_picture"))
-                        .version(rs.getInt("version"))
-
-                        .accessControlList(List.of(Role.WRITE, Role.READ))
-                        .build();
+                return getBlogUser(rs);
             }
 
             return null;
@@ -129,7 +132,7 @@ public class JDBCUserRepository implements UserRepository {
         public UserAndAccountInfo mapRow(ResultSet rs, int rowNum) throws SQLException {
 
             if (rs.next()) {
-                User user = userRowMapper.mapRow(rs, rowNum);
+                User user = UserRowMapper.getBlogUser(rs);
                 return new UserAndAccountInfo(user, rs.getLong("social_media_account_id"));
             }
 

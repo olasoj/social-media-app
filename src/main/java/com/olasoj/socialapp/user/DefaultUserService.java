@@ -1,6 +1,5 @@
 package com.olasoj.socialapp.user;
 
-import com.olasoj.socialapp.registration.RegistrationResult;
 import com.olasoj.socialapp.user.acl.role.Role;
 import com.olasoj.socialapp.user.model.*;
 import com.olasoj.socialapp.user.repository.UserRepository;
@@ -20,6 +19,7 @@ public class DefaultUserService implements UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder argon2PasswordEncoder;
+    private static final String NO_USER_FOUND = "No User Found";
 
     public DefaultUserService(@Qualifier("bCryptPasswordEncoder") PasswordEncoder argon2PasswordEncoder, @Qualifier("JDBCUserRepository") UserRepository userRepository) {
         this.userRepository = userRepository;
@@ -42,7 +42,14 @@ public class DefaultUserService implements UserService {
                 .build();
 
         boolean saveUser = userRepository.saveUser(user);
-        return new CreateUserResult(user);
+        return new CreateUserResult(saveUser ? "Operation was successful" : "Operation failed");
+    }
+
+    @Override
+    public UserAndAccountInfo getUserWithAccountInfo(String username) {
+        return userRepository
+                .findUserWithAccountId(username)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatusCode.valueOf(404), NO_USER_FOUND));
     }
 
     private void validateExistingUser(CreateUserRequest createUserRequest) {
@@ -57,16 +64,16 @@ public class DefaultUserService implements UserService {
     public User findUserByUsername(String username) {
         return userRepository
                 .findUser(username)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatusCode.valueOf(404), "No User Found"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatusCode.valueOf(404), NO_USER_FOUND));
 
     }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userRepository
-                .findUser(username)
-                .orElseThrow(() -> new UsernameNotFoundException("No User Found"));
+        UserAndAccountInfo userAndAccountInfo = userRepository
+                .findUserWithAccountId(username)
+                .orElseThrow(() -> new UsernameNotFoundException(NO_USER_FOUND));
 
-        return new BlogUserPrincipal(user);
+        return new BlogUserPrincipal(userAndAccountInfo.getUser(), userAndAccountInfo.getSocialAccountId());
     }
 }
