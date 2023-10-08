@@ -1,19 +1,19 @@
-package com.olasoj.socialapp.blogpost.model;
+package com.olasoj.socialapp.post.model;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-public record EditBlogPostResult(Blog blog) {
+public record EditPostResult(Blog blog) {
 
     @Override
     public boolean equals(Object obj) {
         if (this == obj) return true;
 
-        if (!(obj instanceof EditBlogPostResult otherEditBlogPostResult)) return false;
+        if (!(obj instanceof EditPostResult otherEditPostResult)) return false;
 
         return new EqualsBuilder()
-                .append(blog, otherEditBlogPostResult.blog)
+                .append(blog, otherEditPostResult.blog)
                 .isEquals();
     }
 

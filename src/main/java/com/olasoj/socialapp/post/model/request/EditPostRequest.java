@@ -1,14 +1,14 @@
-package com.olasoj.socialapp.blogpost.model.request;
+package com.olasoj.socialapp.post.model.request;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.olasoj.socialapp.blogpost.model.Blog;
+import com.olasoj.socialapp.post.model.Blog;
 import jakarta.validation.constraints.NotBlank;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class EditBlogPostRequest {
+public class EditPostRequest {
 
     @NotBlank(message = "Enter title")
     @JsonProperty("title")
@@ -35,7 +35,7 @@ public class EditBlogPostRequest {
     public boolean equals(Object obj) {
         if (this == obj) return true;
 
-        if (!(obj instanceof EditBlogPostRequest otherBlog)) return false;
+        if (!(obj instanceof EditPostRequest otherBlog)) return false;
 
         return new EqualsBuilder()
                 .append(title, otherBlog.title)

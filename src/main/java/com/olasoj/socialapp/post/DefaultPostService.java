@@ -1,11 +1,11 @@
-package com.olasoj.socialapp.blogpost;
+package com.olasoj.socialapp.post;
 
-import com.olasoj.socialapp.blogpost.model.*;
+import com.olasoj.socialapp.post.model.*;
 import com.olasoj.socialapp.author.model.Author;
-import com.olasoj.socialapp.blogpost.model.request.CreateBlogPostRequest;
-import com.olasoj.socialapp.blogpost.model.request.EditBlogPostRequest;
-import com.olasoj.socialapp.blogpost.repository.BlogRepository;
-import com.olasoj.socialapp.blogpost.repository.DefaultBlogRepository;
+import com.olasoj.socialapp.post.model.request.CreatePostRequest;
+import com.olasoj.socialapp.post.model.request.EditPostRequest;
+import com.olasoj.socialapp.post.repository.BlogRepository;
+import com.olasoj.socialapp.post.repository.DefaultBlogRepository;
 import com.olasoj.socialapp.user.model.BlogUserPrincipal;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Component;
@@ -13,42 +13,42 @@ import org.springframework.util.Assert;
 import org.springframework.web.server.ResponseStatusException;
 
 @Component
-public class DefaultBlogService implements BlogService {
+public class DefaultPostService implements PostService {
     private static final String BLOG_USER_PRINCIPAL_CANNOT_BE_NULL = "BlogUserPrincipal cannot be null";
     private final BlogRepository blogRepository;
 
-    public DefaultBlogService() {
+    public DefaultPostService() {
         this.blogRepository = DefaultBlogRepository.blogRepository;
     }
 
     @Override
-    public CreateBlogPostResult createBlogPost(CreateBlogPostRequest createBlogPostRequest, BlogUserPrincipal blogUserPrincipal) {
-        Assert.notNull(createBlogPostRequest, "CreateBlogPostRequest cannot be null");
+    public CreatePostResult createPost(CreatePostRequest createPostRequest, BlogUserPrincipal blogUserPrincipal) {
+        Assert.notNull(createPostRequest, "CreateBlogPostRequest cannot be null");
         Assert.notNull(blogUserPrincipal, BLOG_USER_PRINCIPAL_CANNOT_BE_NULL);
 
         Blog blog = Blog.builder()
-                .title(createBlogPostRequest.title())
-                .body(createBlogPostRequest.body())
+                .title(createPostRequest.title())
+                .body(createPostRequest.body())
                 .author(new Author(blogUserPrincipal.user()))
                 .build();
 
         blogRepository.saveBlogPost(blog);
-        return new CreateBlogPostResult(blog);
+        return new CreatePostResult(blog);
     }
 
     @Override
-    public EditBlogPostResult editBlogPost(String blogId, EditBlogPostRequest editBlogPostRequest, BlogUserPrincipal blogUserPrincipal) {
+    public EditPostResult editPost(String blogId, EditPostRequest editPostRequest, BlogUserPrincipal blogUserPrincipal) {
         Assert.notNull(blogId, "BlogId cannot be null");
-        Assert.notNull(editBlogPostRequest, "EditBlogPostRequest cannot be null");
+        Assert.notNull(editPostRequest, "EditBlogPostRequest cannot be null");
         Assert.notNull(blogUserPrincipal, BLOG_USER_PRINCIPAL_CANNOT_BE_NULL);
 
         Blog blog = validateBlogPostChange(blogId, blogUserPrincipal);
 
-        blog.setTitle(editBlogPostRequest.title());
-        blog.setBody(editBlogPostRequest.body());
+        blog.setTitle(editPostRequest.title());
+        blog.setBody(editPostRequest.body());
 
         blogRepository.updateBlogTitle(blog);
-        return new EditBlogPostResult(blog);
+        return new EditPostResult(blog);
     }
 
     private Blog validateBlogPostChange(String blogId, BlogUserPrincipal blogUserPrincipal) {
@@ -65,18 +65,18 @@ public class DefaultBlogService implements BlogService {
     }
 
     @Override
-    public DeleteBlogPostResult deleteBlogPost(String blogId, BlogUserPrincipal blogUserPrincipal) {
+    public DeletePostResult deletePost(String blogId, BlogUserPrincipal blogUserPrincipal) {
         Assert.notNull(blogUserPrincipal, BLOG_USER_PRINCIPAL_CANNOT_BE_NULL);
 
         validateBlogPostChange(blogId, blogUserPrincipal);
 
         blogRepository.deleteBlogTitle(blogId);
 
-        return new DeleteBlogPostResult();
+        return new DeletePostResult();
     }
 
     @Override
-    public ReadBlogPostResult readBlogPost() {
-        return new ReadBlogPostResult(blogRepository.findAllBlogPost());
+    public ReadPostResult readPost() {
+        return new ReadPostResult(blogRepository.findAllBlogPost());
     }
 }

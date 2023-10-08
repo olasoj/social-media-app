@@ -1,0 +1,104 @@
+package com.olasoj.socialapp.user.repository;
+
+import com.olasoj.socialapp.audit.AuditUtils;
+import com.olasoj.socialapp.user.acl.role.Role;
+import com.olasoj.socialapp.user.model.BlogUser;
+import com.olasoj.socialapp.user.model.User;
+import com.olasoj.socialapp.util.db.DBTimeUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.List;
+import java.util.Optional;
+
+import static com.olasoj.socialapp.user.repository.JDBCUserRepository.UserRowMapper.userRowMapper;
+import static com.olasoj.socialapp.user.repository.UserSQLStatements.fetchNewUserByUsername;
+import static com.olasoj.socialapp.user.repository.UserSQLStatements.insertNewUser;
+
+@Component
+public class JDBCUserRepository implements UserRepository {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(JDBCUserRepository.class);
+
+    private final JdbcTemplate jdbcOperations;
+
+    public JDBCUserRepository(@Qualifier("jdbcTemplate") JdbcTemplate jdbcOperations) {
+        this.jdbcOperations = jdbcOperations;
+    }
+
+
+    @Override
+    public User saveUser(User user) {
+
+        AuditUtils.onCreate(user);
+
+        int update = jdbcOperations.update(
+                insertNewUser,
+                user.getCreatedBy(),
+                user.getUpdatedBy(),
+                user.getUsername(),
+                user.getEmail(),
+                user.getPassword(),
+                user.getProfilePhoto()
+        );
+
+        LOGGER.info("{} row(s) updated", update);
+
+        return user;
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Optional<User> findUser(String userId) {
+
+        Optional<User> query = Optional.ofNullable(
+                jdbcOperations.query(
+                        fetchNewUserByUsername
+                        , rs -> {
+                            return userRowMapper.mapRow(rs, rs.getRow());
+                        }
+                        , userId
+                )
+        );
+
+        query.ifPresent(user -> LOGGER.info("{}: user ", user));
+        return query;
+    }
+
+    static final class UserRowMapper implements RowMapper<User> {
+
+        static final UserRowMapper userRowMapper = new UserRowMapper();
+
+
+        public User mapRow(ResultSet rs, int rowNum) throws SQLException {
+
+            if (rs.next()) {
+                return BlogUser.builder()
+                        .userId(rs.getLong("user_id"))
+                        .username(rs.getString("username"))
+                        .email(rs.getString("email"))
+                        .password(rs.getString("password"))
+
+                        .createdAt(DBTimeUtils.getInstant(rs, "created_at"))
+                        .updatedAt(DBTimeUtils.getInstant(rs, ("updated_at")))
+                        .createdBy(rs.getString("created_by"))
+                        .updatedBy(rs.getString("updated_by"))
+
+                        .profilePhoto(rs.getString("profile_picture"))
+                        .version(rs.getInt("version"))
+
+                        .accessControlList(List.of(Role.WRITE, Role.READ))
+                        .build();
+            }
+
+            return null;
+        }
+    }
+}

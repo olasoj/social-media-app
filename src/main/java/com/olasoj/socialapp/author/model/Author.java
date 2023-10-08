@@ -10,7 +10,7 @@ public class Author {
     private final String userId;
 
     public Author(User user) {
-        this.userId = user.getUserId();
+        this.userId = String.valueOf(user.getUserId());
     }
 
     public String getUserId() {

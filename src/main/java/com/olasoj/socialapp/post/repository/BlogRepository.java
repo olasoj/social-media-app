@@ -1,6 +1,6 @@
-package com.olasoj.socialapp.blogpost.repository;
+package com.olasoj.socialapp.post.repository;
 
-import com.olasoj.socialapp.blogpost.model.Blog;
+import com.olasoj.socialapp.post.model.Blog;
 
 import java.util.List;
 import java.util.Optional;

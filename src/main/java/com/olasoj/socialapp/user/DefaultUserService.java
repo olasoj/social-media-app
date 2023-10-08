@@ -2,7 +2,6 @@ package com.olasoj.socialapp.user;
 
 import com.olasoj.socialapp.user.acl.role.Role;
 import com.olasoj.socialapp.user.model.*;
-import com.olasoj.socialapp.user.repository.DefaultUserRepository;
 import com.olasoj.socialapp.user.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatusCode;
@@ -10,6 +9,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
@@ -21,12 +22,13 @@ public class DefaultUserService implements UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder argon2PasswordEncoder;
 
-    public DefaultUserService(@Qualifier("bCryptPasswordEncoder") PasswordEncoder argon2PasswordEncoder) {
-        this.userRepository = DefaultUserRepository.userRepository;
+    public DefaultUserService(@Qualifier("bCryptPasswordEncoder") PasswordEncoder argon2PasswordEncoder, @Qualifier("JDBCUserRepository") UserRepository userRepository) {
+        this.userRepository = userRepository;
         this.argon2PasswordEncoder = argon2PasswordEncoder;
     }
 
     @Override
+    @Transactional(propagation = Propagation.NESTED)
     public CreateUserResult createUser(CreateUserRequest createUserRequest) {
 
         validateExistingUser(createUserRequest);
@@ -35,7 +37,9 @@ public class DefaultUserService implements UserService {
         User user = BlogUser.builder()
                 .password(encodePassword)
                 .username(createUserRequest.getUsername())
+                .email(createUserRequest.getEmail())
                 .accessControlList(List.of(Role.WRITE, Role.READ))
+                .profilePhoto("")
                 .build();
 
         userRepository.saveUser(user);
@@ -48,6 +52,14 @@ public class DefaultUserService implements UserService {
                 .ifPresent(u -> {
                     throw new ResponseStatusException(HttpStatusCode.valueOf(409), "UserName taken");
                 });
+    }
+
+    @Override
+    public User findUserByUsername(String username)  {
+        return userRepository
+                .findUser(username)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatusCode.valueOf(404), "No User Found"));
+
     }
 
     @Override

@@ -10,11 +10,16 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.datasource.DataSourceTransactionManager;
+import org.springframework.jdbc.support.JdbcTransactionManager;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import javax.sql.DataSource;
 import java.time.Duration;
 
 @Configuration
+@EnableTransactionManagement
 public class PersistenceConfig {
 
     @Bean
@@ -58,6 +63,13 @@ public class PersistenceConfig {
                 .dataSource(dataSource)
                 .locations("classpath:db/migration") // this path is default
                 .load();
+    }
+
+    @Bean(name = "txManage")
+    public PlatformTransactionManager transactionManager(@Qualifier("mainSqlDataSource") DataSource dataSource) {
+        DataSourceTransactionManager jdbcTransactionManager = new JdbcTransactionManager(dataSource);
+        jdbcTransactionManager.setDefaultTimeout(30);
+        return jdbcTransactionManager;
     }
 
 }

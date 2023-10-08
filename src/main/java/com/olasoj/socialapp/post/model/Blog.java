@@ -1,4 +1,4 @@
-package com.olasoj.socialapp.blogpost.model;
+package com.olasoj.socialapp.post.model;
 
 import com.olasoj.socialapp.author.model.Author;
 import com.olasoj.socialapp.util.security.Utils;
