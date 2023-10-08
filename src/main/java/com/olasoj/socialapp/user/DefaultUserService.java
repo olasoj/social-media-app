@@ -1,5 +1,6 @@
 package com.olasoj.socialapp.user;
 
+import com.olasoj.socialapp.registration.RegistrationResult;
 import com.olasoj.socialapp.user.acl.role.Role;
 import com.olasoj.socialapp.user.model.*;
 import com.olasoj.socialapp.user.repository.UserRepository;
@@ -40,7 +41,7 @@ public class DefaultUserService implements UserService {
                 .profilePhoto("")
                 .build();
 
-        userRepository.saveUser(user);
+        boolean saveUser = userRepository.saveUser(user);
         return new CreateUserResult(user);
     }
 

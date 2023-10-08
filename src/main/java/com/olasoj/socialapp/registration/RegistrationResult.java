@@ -1,15 +1,16 @@
-package com.olasoj.socialapp.user.model;
+package com.olasoj.socialapp.registration;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.olasoj.socialapp.user.model.User;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
-public class CreateUserResult {
+public class RegistrationResult {
 
     @JsonProperty("user")
     private final String message;
 
-    public CreateUserResult(String newUser) {
+    public RegistrationResult(String newUser) {
         this.message = newUser;
     }
 
@@ -21,7 +22,7 @@ public class CreateUserResult {
     public boolean equals(Object obj) {
         if (this == obj) return true;
 
-        if (!(obj instanceof CreateUserResult otherRegistrationResult)) return false;
+        if (!(obj instanceof RegistrationResult otherRegistrationResult)) return false;
 
         return new EqualsBuilder()
                 .append(message, otherRegistrationResult.message)

@@ -31,6 +31,17 @@ public class DefaultSocialMediaAccountService implements SocialMediaAccountServi
         return socialMediaAccountRepository.saveSocialMediaAccount(new SocialMediaAccount(user.getUserId()));
     }
 
+    @Override
+    @Transactional
+    public void validateExistingSocialMediaAccount(Long socialAccountId) {
+
+        socialMediaAccountRepository
+                .findSocialMediaAccountById(socialAccountId)
+                .orElseThrow(() -> {
+                    throw new ResponseStatusException(HttpStatusCode.valueOf(409), "User already has an account");
+                });
+    }
+
     private void validateExistingSocialMediaAccount(User user) {
         socialMediaAccountRepository
                 .findSocialMediaAccountByUserId(user.getUserId())

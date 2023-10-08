@@ -4,6 +4,7 @@ import com.olasoj.socialapp.audit.AuditUtils;
 import com.olasoj.socialapp.user.acl.role.Role;
 import com.olasoj.socialapp.user.model.BlogUser;
 import com.olasoj.socialapp.user.model.User;
+import com.olasoj.socialapp.user.model.UserAndAccountInfo;
 import com.olasoj.socialapp.util.db.DBTimeUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,9 +19,9 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 
+import static com.olasoj.socialapp.user.repository.JDBCUserRepository.UserAndAccountInfoRowMapper.userAndAccountInfoRowMapper;
 import static com.olasoj.socialapp.user.repository.JDBCUserRepository.UserRowMapper.userRowMapper;
-import static com.olasoj.socialapp.user.repository.UserSQLStatements.fetchNewUserByUsername;
-import static com.olasoj.socialapp.user.repository.UserSQLStatements.insertNewUser;
+import static com.olasoj.socialapp.user.repository.UserSQLStatements.*;
 
 @Component
 public class JDBCUserRepository implements UserRepository {
@@ -35,7 +36,7 @@ public class JDBCUserRepository implements UserRepository {
 
 
     @Override
-    public User saveUser(User user) {
+    public boolean saveUser(User user) {
 
         AuditUtils.onCreate(user);
 
@@ -51,7 +52,7 @@ public class JDBCUserRepository implements UserRepository {
 
         LOGGER.info("{} row(s) updated", update);
 
-        return user;
+        return update == 1;
     }
 
     @Override
@@ -63,6 +64,24 @@ public class JDBCUserRepository implements UserRepository {
                         fetchNewUserByUsername
                         , rs -> {
                             return userRowMapper.mapRow(rs, rs.getRow());
+                        }
+                        , userId
+                )
+        );
+
+        query.ifPresent(user -> LOGGER.info("{}: user ", user));
+        return query;
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Optional<UserAndAccountInfo> findUserWithAccountId(String userId) {
+
+        Optional<UserAndAccountInfo> query = Optional.ofNullable(
+                jdbcOperations.query(
+                        fetchUserAndAccountIdByUsername
+                        , rs -> {
+                            return userAndAccountInfoRowMapper.mapRow(rs, rs.getRow());
                         }
                         , userId
                 )
@@ -96,6 +115,22 @@ public class JDBCUserRepository implements UserRepository {
 
                         .accessControlList(List.of(Role.WRITE, Role.READ))
                         .build();
+            }
+
+            return null;
+        }
+    }
+
+    static final class UserAndAccountInfoRowMapper implements RowMapper<UserAndAccountInfo> {
+
+        static final RowMapper<UserAndAccountInfo> userAndAccountInfoRowMapper = new UserAndAccountInfoRowMapper();
+
+
+        public UserAndAccountInfo mapRow(ResultSet rs, int rowNum) throws SQLException {
+
+            if (rs.next()) {
+                User user = userRowMapper.mapRow(rs, rowNum);
+                return new UserAndAccountInfo(user, rs.getLong("social_media_account_id"));
             }
 
             return null;

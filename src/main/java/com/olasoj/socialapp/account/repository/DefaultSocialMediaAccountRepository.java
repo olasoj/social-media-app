@@ -53,6 +53,22 @@ public class DefaultSocialMediaAccountRepository implements SocialMediaAccountRe
         );
     }
 
+    @Override
+    public Optional<SocialMediaAccount> findSocialMediaAccountById(Long socialMediaAccountId) {
+
+        return Optional.ofNullable(
+                jdbcOperations.query(
+                        """
+                                SELECT social_media_account_id FROM social_media_account WHERE social_media_account_id = ?  
+                                """
+                        , rs -> {
+                            return SocialMediaAccountRowMapper.socialMediaAccountRowMapper.mapRow(rs, rs.getRow());
+                        }
+                        , socialMediaAccountId
+                )
+        );
+    }
+
     static final class SocialMediaAccountRowMapper implements RowMapper<SocialMediaAccount> {
 
         static final SocialMediaAccountRowMapper socialMediaAccountRowMapper = new SocialMediaAccountRowMapper();

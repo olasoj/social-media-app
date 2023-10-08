@@ -11,4 +11,5 @@ public interface SocialMediaAccountRepository {
     Optional<SocialMediaAccount> findSocialMediaAccountByUserId(Long userId);
 
 
+    Optional<SocialMediaAccount> findSocialMediaAccountById(Long socialMediaAccountId);
 }

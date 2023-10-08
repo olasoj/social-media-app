@@ -1,12 +1,17 @@
 package com.olasoj.socialapp.registration;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.olasoj.socialapp.user.model.CreateUserRequest;
+import jakarta.validation.constraints.NotNull;
 
 import java.util.Objects;
 import java.util.StringJoiner;
 
 public class RegistrationRequest {
 
+
+    @JsonProperty("user")
+    @NotNull(message = "User request is required")
     private CreateUserRequest createUserRequest;
 
     public RegistrationRequest(CreateUserRequest createUserRequest) {

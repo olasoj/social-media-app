@@ -24,7 +24,7 @@ public class AuditUtils {
         auditObject.setUpdatedBy(getUsername());
     }
 
-    private static String getUsername() {
+    public static String getUsername() {
 
         SecurityContext context = SecurityContextHolder.getContext();
         if (Objects.isNull(context)) return ANONYMOUS;

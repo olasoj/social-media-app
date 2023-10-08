@@ -22,9 +22,10 @@ public class DefaultRegistrationService implements RegistrationService {
 
     @Override
     @Transactional(propagation = Propagation.REQUIRES_NEW)
-    public void registerUser(RegistrationRequest registrationRequest) {
+    public RegistrationResult registerUser(RegistrationRequest registrationRequest) {
         CreateUserRequest createUserRequest = registrationRequest.getCreateUserRequest();
         userService.createUser(createUserRequest);
         socialMediaAccountService.createSocialMediaAccount(new CreateNewSocialAccountRequest(createUserRequest.getUsername()));
+        return new RegistrationResult("Operation completed");
     }
 }

@@ -1,10 +1,8 @@
-package com.olasoj.socialapp.user.adapter;
+package com.olasoj.socialapp.registration;
 
 import com.olasoj.socialapp.user.model.CreateUserRequest;
-import com.olasoj.socialapp.user.model.CreateUserResult;
 import com.olasoj.socialapp.util.response.model.Response;
 import com.olasoj.socialapp.util.response.transformer.ResponseAssembler;
-import com.olasoj.socialapp.user.UserService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -19,18 +17,18 @@ import java.net.URISyntaxException;
 
 @RestController
 @RequestMapping(value = "/register", consumes = MediaType.APPLICATION_JSON_VALUE )
-public class UserInboundRestController {
+public class RegistrationInboundRestController {
 
-    private final UserService userService;
+    private final RegistrationService registrationService;
 
-    public UserInboundRestController(UserService userService) {
-        this.userService = userService;
+    public RegistrationInboundRestController(RegistrationService registrationService) {
+        this.registrationService = registrationService;
     }
 
     @PostMapping(path = "/")
-    public ResponseEntity<Response<CreateUserResult>> createBlogPost(@Valid @RequestBody CreateUserRequest createBlogPostRequest) throws URISyntaxException {
-        CreateUserResult createUserResult = userService.createUser(createBlogPostRequest);
-        Response<CreateUserResult> model = ResponseAssembler.toResponse(HttpStatus.CREATED, createUserResult);
+    public ResponseEntity<Response<RegistrationResult>> createBlogPost(@Valid @RequestBody RegistrationRequest registrationRequest) throws URISyntaxException {
+        RegistrationResult registrationResult = registrationService.registerUser(registrationRequest);
+        Response<RegistrationResult> model = ResponseAssembler.toResponse(HttpStatus.CREATED, registrationResult);
         return ResponseEntity.created(new URI("")).body(model);
     }
 
