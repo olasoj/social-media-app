@@ -29,14 +29,14 @@ public class CMLRunner implements CommandLineRunner {
     public void run(String... args) {
 
 
-        CreateUserRequest createUserRequest = new CreateUserRequest();
-        createUserRequest.setEmail(email);
-        createUserRequest.setPassword(email);
-        createUserRequest.setUsername(email);
-        registrationService.registerUser(new RegistrationRequest(createUserRequest));
-
-        userRepository.findUser(email);
-        throw new RuntimeException();
+//        CreateUserRequest createUserRequest = new CreateUserRequest();
+//        createUserRequest.setEmail(email);
+//        createUserRequest.setPassword(email);
+//        createUserRequest.setUsername(email);
+//        registrationService.registerUser(new RegistrationRequest(createUserRequest));
+//
+//        userRepository.findUser(email);
+//        throw new RuntimeException();
 
     }
 }

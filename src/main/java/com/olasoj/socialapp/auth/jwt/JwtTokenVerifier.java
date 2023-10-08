@@ -52,7 +52,7 @@ public class JwtTokenVerifier extends OncePerRequestFilter {
         MvcRequestMatcher mvcRequestMatcher = new MvcRequestMatcher(handlerMappingIntrospector, "/api/v1/auth/login");
         mvcRequestMatcher.setMethod(HttpMethod.POST);
 
-        MvcRequestMatcher mvcRequestMatcher2 = new MvcRequestMatcher(handlerMappingIntrospector, "/api/v1/blog-post/");
+        MvcRequestMatcher mvcRequestMatcher2 = new MvcRequestMatcher(handlerMappingIntrospector, "/api/v1/post/");
         mvcRequestMatcher2.setMethod(HttpMethod.GET);
 
         MvcRequestMatcher mvcRequestMatcher3 = new MvcRequestMatcher(handlerMappingIntrospector, "/api/v1/register/");
@@ -116,7 +116,7 @@ public class JwtTokenVerifier extends OncePerRequestFilter {
     protected boolean shouldNotFilter(@NonNull HttpServletRequest request) {
         //Has bugs; implement yours
 
-        return requestMatchers.stream().anyMatch(requestMatcher -> requestMatcher.matches(request));
+        return true;//requestMatchers.stream().anyMatch(requestMatcher -> requestMatcher.matches(request));
     }
 
 }

@@ -4,7 +4,7 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-public record CreatePostResult(Blog blog) {
+public record CreatePostResult(Post post) {
 
     @Override
     public boolean equals(Object obj) {
@@ -12,18 +12,18 @@ public record CreatePostResult(Blog blog) {
 
         if (!(obj instanceof CreatePostResult otherCreatePostResult)) return false;
 
-        return new EqualsBuilder().append(blog, otherCreatePostResult.blog).isEquals();
+        return new EqualsBuilder().append(post, otherCreatePostResult.post).isEquals();
     }
 
     @Override
     public int hashCode() {
-        return new HashCodeBuilder(17, 37).append(blog).toHashCode();
+        return new HashCodeBuilder(17, 37).append(post).toHashCode();
     }
 
     @Override
     public String toString() {
         return new ToStringBuilder(this)
-                .append("blog", blog)
+                .append("post", post)
                 .toString();
     }
 }
