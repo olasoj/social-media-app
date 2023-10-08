@@ -5,17 +5,19 @@ import com.olasoj.socialapp.post.model.request.CreatePostRequest;
 import com.olasoj.socialapp.post.model.request.EditPostRequest;
 import com.olasoj.socialapp.post.model.request.ReadPostsRequest;
 import com.olasoj.socialapp.user.model.BlogUserPrincipal;
+import org.springframework.transaction.annotation.Transactional;
 
 public interface PostService {
 
-    CreatePostResult createPost(CreatePostRequest createPostRequest, BlogUserPrincipal blogUserPrincipal);
+    GenericPostResult createPost(CreatePostRequest createPostRequest, BlogUserPrincipal blogUserPrincipal);
 
-    EditPostResult editPost(Long postId, EditPostRequest editPostRequest, BlogUserPrincipal blogUserPrincipal);
+    GenericPostResult editPost(Long postId, EditPostRequest editPostRequest, BlogUserPrincipal blogUserPrincipal);
 
-    DeletePostResult deletePost(Long postId, BlogUserPrincipal blogUserPrincipal);
+    GenericPostResult deletePost(Long postId, BlogUserPrincipal blogUserPrincipal);
 
     ReadPostResult readPost(Long postId);
 
     ReadPostsResult readAllPosts(ReadPostsRequest readPostsRequest);
 
+    GenericPostResult likePost(Long postId);
 }

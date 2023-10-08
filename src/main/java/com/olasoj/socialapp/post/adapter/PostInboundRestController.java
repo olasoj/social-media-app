@@ -1,7 +1,9 @@
 package com.olasoj.socialapp.post.adapter;
 
 import com.olasoj.socialapp.post.PostService;
-import com.olasoj.socialapp.post.model.*;
+import com.olasoj.socialapp.post.model.GenericPostResult;
+import com.olasoj.socialapp.post.model.ReadPostResult;
+import com.olasoj.socialapp.post.model.ReadPostsResult;
 import com.olasoj.socialapp.post.model.request.CreatePostRequest;
 import com.olasoj.socialapp.post.model.request.EditPostRequest;
 import com.olasoj.socialapp.post.model.request.ReadPostsRequest;
@@ -30,9 +32,9 @@ public class PostInboundRestController {
     }
 
     @PostMapping(path = "/")
-    public ResponseEntity<Response<CreatePostResult>> createBlogPost(@Valid @RequestBody CreatePostRequest createPostRequest, @AuthenticationPrincipal BlogUserPrincipal blogUserPrincipal) throws URISyntaxException {
-        CreatePostResult createPostResult = postService.createPost(createPostRequest, blogUserPrincipal);
-        Response<CreatePostResult> model = ResponseAssembler.toResponse(HttpStatus.CREATED, createPostResult);
+    public ResponseEntity<Response<GenericPostResult>> createPost(@Valid @RequestBody CreatePostRequest createPostRequest, @AuthenticationPrincipal BlogUserPrincipal blogUserPrincipal) throws URISyntaxException {
+        GenericPostResult createPostResult = postService.createPost(createPostRequest, blogUserPrincipal);
+        Response<GenericPostResult> model = ResponseAssembler.toResponse(HttpStatus.CREATED, createPostResult);
         return ResponseEntity.created(new URI("")).body(model);
     }
 
@@ -58,16 +60,23 @@ public class PostInboundRestController {
     }
 
     @PutMapping(value = "/{postId}")
-    public ResponseEntity<Response<EditPostResult>> editBlogPost(@PathVariable(value = "postId") Long postId, @Valid @RequestBody EditPostRequest editPostRequest, @AuthenticationPrincipal BlogUserPrincipal blogUserPrincipal) {
-        EditPostResult editPostResult = postService.editPost(postId, editPostRequest, blogUserPrincipal);
-        Response<EditPostResult> response = ResponseAssembler.toResponse(HttpStatus.OK, editPostResult);
+    public ResponseEntity<Response<GenericPostResult>> editPost(@PathVariable(value = "postId") Long postId, @Valid @RequestBody EditPostRequest editPostRequest, @AuthenticationPrincipal BlogUserPrincipal blogUserPrincipal) {
+        GenericPostResult editPostResult = postService.editPost(postId, editPostRequest, blogUserPrincipal);
+        Response<GenericPostResult> response = ResponseAssembler.toResponse(HttpStatus.OK, editPostResult);
         return ResponseEntity.ok().body(response);
     }
 
     @DeleteMapping(value = "/{postId}")
-    public ResponseEntity<Response<DeletePostResult>> deleteBlogPost(@PathVariable(value = "postId") Long postId, @AuthenticationPrincipal BlogUserPrincipal blogUserPrincipal) {
-        DeletePostResult deletePostResult = postService.deletePost(postId, blogUserPrincipal);
-        Response<DeletePostResult> response = ResponseAssembler.toResponse(HttpStatus.OK, deletePostResult);
+    public ResponseEntity<Response<GenericPostResult>> deletePost(@PathVariable(value = "postId") Long postId, @AuthenticationPrincipal BlogUserPrincipal blogUserPrincipal) {
+        GenericPostResult deletePostResult = postService.deletePost(postId, blogUserPrincipal);
+        Response<GenericPostResult> response = ResponseAssembler.toResponse(HttpStatus.OK, deletePostResult);
+        return ResponseEntity.ok().body(response);
+    }
+
+    @PutMapping(value = "/like/{postId}")
+    public ResponseEntity<Response<GenericPostResult>> likePost(@PathVariable(value = "postId") Long postId, @AuthenticationPrincipal BlogUserPrincipal blogUserPrincipal) {
+        GenericPostResult deletePostResult = postService.likePost(postId);
+        Response<GenericPostResult> response = ResponseAssembler.toResponse(HttpStatus.OK, deletePostResult);
         return ResponseEntity.ok().body(response);
     }
 }

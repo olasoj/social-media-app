@@ -4,7 +4,7 @@ public class PostSQLStatements {
 
     static String insertNewPost = """
                 INSERT INTO post (created_by, updated_by, content, like_count, social_media_account_id)
-                VALUES (?, ?, ?, ?, ?)
+                VALUES (?, ?, ?, ?, ?);
             """;
 
     static String fetchPostByPostId = """
@@ -40,15 +40,22 @@ public class PostSQLStatements {
                             FROM post P
                         WHERE content = (CASE WHEN ?::text IS NULL THEN P.content ELSE ? END)
                         ORDER BY updated_at DESC
+                        OFFSET (?) ROWS FETCH NEXT ? ROWS ONLY;
             """;
 
-//                            OFFSET (?) ROWS FETCH NEXT ? ROWS ONLY;
-//    to_tsvector('simple', content) @@ plainto_tsquery('simple', ?)
     static String updatePostByPostId = """
                             UPDATE post
                             SET content = ?, updated_by =?
-                            WHERE post_id = ?
+                            WHERE post_id = ?;
             """;
+
+    static String likePostByPostId = """
+                            
+                                UPDATE post
+                                SET like_count = like_count + 1
+                                , updated_by =?
+                                WHERE post_id = ?;
+                            """;
 
     private PostSQLStatements() {
     }

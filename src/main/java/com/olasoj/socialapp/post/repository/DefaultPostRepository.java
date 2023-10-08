@@ -32,7 +32,7 @@ public class DefaultPostRepository implements PostRepository {
     }
 
     @Override
-    public Post saveBlogPost(Post post) {
+    public boolean saveBlogPost(Post post) {
 
         AuditUtils.onCreate(post);
 
@@ -44,7 +44,7 @@ public class DefaultPostRepository implements PostRepository {
                 post.getLikeCount(),
                 post.getSocialMediaAccountId()
         );
-        return null;
+        return update == 1;
     }
 
     @Override
@@ -71,20 +71,20 @@ public class DefaultPostRepository implements PostRepository {
                 fetchAllPosts
                 , StringUtils.isBlank(readPostsRequest.getContent()) ? null : readPostsRequest.getContent()
                 , StringUtils.isBlank(readPostsRequest.getContent()) ? null : readPostsRequest.getContent()
-//                , pagingInfo.getPageSize() * pagingInfo.getCurrentPage() - 1
-//                , pagingInfo.getPageSize()
+                , pagingInfo.getPageSize() * (pagingInfo.getCurrentPage() - 1)
+                , pagingInfo.getPageSize()
         );
 
         return PostAssembler.assemble(posts, pagingInfo);
     }
 
     @Override
-    public Optional<Post> deletePost(Long postId) {
-        return Optional.empty();
+    public boolean deletePost(Long postId) {
+        return false;
     }
 
     @Override
-    public Post updatePostContent(Post post) {
+    public boolean updatePostContent(Post post) {
 
         Assert.notNull(post, "Post cannot be null");
         Assert.notNull(post.getPostId(), "PostId cannot be null");
@@ -96,7 +96,22 @@ public class DefaultPostRepository implements PostRepository {
                 post.getUpdatedBy(),
                 post.getPostId()
         );
-        return null;
+        return update == 1;
+    }
+
+    @Override
+    public boolean likePostContent(Post post) {
+
+        Assert.notNull(post, "Post cannot be null");
+        Assert.notNull(post.getPostId(), "PostId cannot be null");
+        AuditUtils.onUpdate(post);
+
+        int update = jdbcOperations.update(
+                likePostByPostId,
+                post.getUpdatedBy(),
+                post.getPostId()
+        );
+        return update == 1;
     }
 
     static final class PostRowMapper implements RowMapper<Post> {

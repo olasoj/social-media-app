@@ -1,6 +1,9 @@
 package com.olasoj.socialapp.post;
 
-import com.olasoj.socialapp.post.model.*;
+import com.olasoj.socialapp.post.model.GenericPostResult;
+import com.olasoj.socialapp.post.model.Post;
+import com.olasoj.socialapp.post.model.ReadPostResult;
+import com.olasoj.socialapp.post.model.ReadPostsResult;
 import com.olasoj.socialapp.post.model.request.CreatePostRequest;
 import com.olasoj.socialapp.post.model.request.EditPostRequest;
 import com.olasoj.socialapp.post.model.request.ReadPostsRequest;
@@ -13,8 +16,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.Collections;
-
 @Service
 public class DefaultPostService implements PostService {
     private static final String BLOG_USER_PRINCIPAL_CANNOT_BE_NULL = "BlogUserPrincipal cannot be null";
@@ -26,7 +27,7 @@ public class DefaultPostService implements PostService {
 
     @Override
     @Transactional
-    public CreatePostResult createPost(CreatePostRequest createPostRequest, BlogUserPrincipal blogUserPrincipal) {
+    public GenericPostResult createPost(CreatePostRequest createPostRequest, BlogUserPrincipal blogUserPrincipal) {
         Assert.notNull(createPostRequest, "CreateBlogPostRequest cannot be null");
         Assert.notNull(blogUserPrincipal, BLOG_USER_PRINCIPAL_CANNOT_BE_NULL);
 
@@ -36,13 +37,18 @@ public class DefaultPostService implements PostService {
                 .socialMediaAccountId(2L) //TODO fix me
                 .build();
 
-        postRepository.saveBlogPost(post);
-        return new CreatePostResult(post);
+        boolean saveBlogPost = postRepository.saveBlogPost(post);
+        return getGenericPostResult(saveBlogPost);
+
+    }
+
+    private GenericPostResult getGenericPostResult(boolean saveBlogPost) {
+        return new GenericPostResult(saveBlogPost ? "Operation successful" : "Operation failed");
     }
 
     @Override
     @Transactional
-    public EditPostResult editPost(Long postId, EditPostRequest editPostRequest, BlogUserPrincipal blogUserPrincipal) {
+    public GenericPostResult editPost(Long postId, EditPostRequest editPostRequest, BlogUserPrincipal blogUserPrincipal) {
 
         Assert.notNull(postId, "BlogId cannot be null");
         Assert.notNull(editPostRequest, "EditBlogPostRequest cannot be null");
@@ -52,8 +58,8 @@ public class DefaultPostService implements PostService {
 
         post.setContent(editPostRequest.content());
 
-        postRepository.updatePostContent(post);
-        return new EditPostResult(post);
+        boolean updatePostContent = postRepository.updatePostContent(post);
+        return getGenericPostResult(updatePostContent);
     }
 
     private Post getPostInternal(Long postId) {
@@ -66,17 +72,17 @@ public class DefaultPostService implements PostService {
 
     @Override
     @Transactional
-    public DeletePostResult deletePost(Long postId, BlogUserPrincipal blogUserPrincipal) {
+    public GenericPostResult deletePost(Long postId, BlogUserPrincipal blogUserPrincipal) {
+
         Assert.notNull(blogUserPrincipal, BLOG_USER_PRINCIPAL_CANNOT_BE_NULL);
 
         getPostInternal(postId);
-
-        postRepository.deletePost(postId);
-
-        return new DeletePostResult();
+        boolean deletePost = postRepository.deletePost(postId);
+        return getGenericPostResult(deletePost);
     }
 
     @Override
+    @Transactional
     public ReadPostResult readPost(Long postId) {
         return new ReadPostResult(getPostInternal(postId));
     }
@@ -87,5 +93,14 @@ public class DefaultPostService implements PostService {
 
         Assert.notNull(readPostsRequest, "ReadPostsRequest cannot be null");
         return new ReadPostsResult(postRepository.findAllPost(readPostsRequest));
+    }
+
+    @Override
+    @Transactional
+    public GenericPostResult likePost(Long postId) {
+
+        Post post = getPostInternal(postId);
+        boolean likePostContent = postRepository.likePostContent(post);
+        return getGenericPostResult(likePostContent);
     }
 }

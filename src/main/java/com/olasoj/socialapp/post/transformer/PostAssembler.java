@@ -46,6 +46,7 @@ public class PostAssembler {
                 .likeCount((Integer) mapItem.get("like_count"))
                 .content((String) mapItem.get("content"))
 
+                //TODO: Fix this
 //                    .createdAt(DBTimeUtils.getInstant(mapItem, "created_at"))
 //                    .updatedAt(DBTimeUtils.getInstant(mapItem, ("updated_at")))
                 .createdBy((String) mapItem.get("created_by"))

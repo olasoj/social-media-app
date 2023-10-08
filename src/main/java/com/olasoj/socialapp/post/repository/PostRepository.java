@@ -8,13 +8,15 @@ import java.util.List;
 import java.util.Optional;
 
 public interface PostRepository {
-    Post saveBlogPost(Post post);
+    boolean saveBlogPost(Post post);
 
     Optional<Post> findPostByPostId(Long postId);
 
     PostWithPageInfoResult findAllPost(ReadPostsRequest readPostsRequest);
 
-    Optional<Post> deletePost(Long userId);
+    boolean deletePost(Long userId);
 
-    Post updatePostContent(Post post);
+    boolean updatePostContent(Post post);
+
+    boolean likePostContent(Post post);
 }
