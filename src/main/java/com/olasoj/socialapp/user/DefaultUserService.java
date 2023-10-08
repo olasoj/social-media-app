@@ -9,7 +9,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -18,7 +17,6 @@ import java.util.List;
 @Service
 public class DefaultUserService implements UserService {
 
-    //save user
     private final UserRepository userRepository;
     private final PasswordEncoder argon2PasswordEncoder;
 
@@ -28,7 +26,7 @@ public class DefaultUserService implements UserService {
     }
 
     @Override
-    @Transactional(propagation = Propagation.NESTED)
+    @Transactional
     public CreateUserResult createUser(CreateUserRequest createUserRequest) {
 
         validateExistingUser(createUserRequest);
@@ -55,7 +53,7 @@ public class DefaultUserService implements UserService {
     }
 
     @Override
-    public User findUserByUsername(String username)  {
+    public User findUserByUsername(String username) {
         return userRepository
                 .findUser(username)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatusCode.valueOf(404), "No User Found"));

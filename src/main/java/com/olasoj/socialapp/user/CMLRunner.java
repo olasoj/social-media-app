@@ -1,6 +1,7 @@
 package com.olasoj.socialapp.user;
 
-
+import com.olasoj.socialapp.registration.RegistrationRequest;
+import com.olasoj.socialapp.registration.RegistrationService;
 import com.olasoj.socialapp.user.model.CreateUserRequest;
 import com.olasoj.socialapp.user.repository.UserRepository;
 import org.slf4j.Logger;
@@ -17,7 +18,7 @@ public class CMLRunner implements CommandLineRunner {
     private static final Logger LOGGER = LoggerFactory.getLogger(CMLRunner.class);
     private final String email = "olasoji@eail.com";
     @Autowired
-    UserService userService;
+    RegistrationService registrationService;
 
     @Autowired
     @Qualifier("JDBCUserRepository")
@@ -25,14 +26,14 @@ public class CMLRunner implements CommandLineRunner {
 
     @Override
     @Transactional
-    public void run(String... args) throws Exception {
+    public void run(String... args) {
 
 
         CreateUserRequest createUserRequest = new CreateUserRequest();
         createUserRequest.setEmail(email);
         createUserRequest.setPassword(email);
         createUserRequest.setUsername(email);
-        userService.createUser(createUserRequest);
+        registrationService.registerUser(new RegistrationRequest(createUserRequest));
 
         userRepository.findUser(email);
         throw new RuntimeException();

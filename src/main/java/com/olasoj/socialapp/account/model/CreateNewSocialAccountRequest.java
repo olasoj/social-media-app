@@ -15,6 +15,10 @@ public class CreateNewSocialAccountRequest {
         this.username = username;
     }
 
+    public CreateNewSocialAccountRequest(String username) {
+        this.username = username;
+    }
+
     @Override
     public boolean equals(Object obj) {
         if (this == obj) return true;
