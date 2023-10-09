@@ -100,7 +100,7 @@ public class DefaultFollowRelationShipRepository implements FollowRepository {
                 followRelationShip.setSocialMediaAccountId(rs.getLong("social_media_account_id"));
                 followRelationShip.setFollowSocialMediaAccountId(rs.getLong("follow_social_media_account_id"));
                 followRelationShip.setFollowId(rs.getLong("follow_id"));
-                followRelationShip.setFollowStatus(Objects.isNull(rs.getString("follow_id")) ? null : FollowStatus.valueOf(rs.getString("follow_id")));
+                followRelationShip.setFollowStatus(Objects.isNull(rs.getString("follow_status")) ? null : FollowStatus.valueOf(rs.getString("follow_status")));
 
                 followRelationShip.setCreatedAt(DBTimeUtils.getInstant(rs, "created_at"));
                 followRelationShip.setUpdatedAt(DBTimeUtils.getInstant(rs, ("updated_at")));

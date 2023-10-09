@@ -15,6 +15,9 @@ public final class ReadCommentsRequest implements Serializable {
         this.pagingInfo = pagingInfo;
     }
 
+    public ReadCommentsRequest() {
+    }
+
     @Override
     public boolean equals(Object obj) {
         if (this == obj) return true;

@@ -52,6 +52,11 @@ public class DefaultUserService implements UserService {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatusCode.valueOf(404), NO_USER_FOUND));
     }
 
+    @Override
+    public UserWithPageInfoResult getAllUserWithAccountInfo(ReadUsersRequest readUsersRequest) {
+        return userRepository.findAllUsers(readUsersRequest);
+    }
+
     private void validateExistingUser(CreateUserRequest createUserRequest) {
         userRepository
                 .findUser(createUserRequest.getUsername())

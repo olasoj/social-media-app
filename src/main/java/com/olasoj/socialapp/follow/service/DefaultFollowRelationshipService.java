@@ -62,6 +62,6 @@ public class DefaultFollowRelationshipService implements FollowRelationshipServi
     @Override
     @Transactional(readOnly = true)
     public List<Map<String, Object>> getAllFollowing(Long socialAccountId) {
-        return followRepository.findAllFollowersRelationShip(socialAccountId);
+        return followRepository.findAllFollowingRelationShip(socialAccountId);
     }
 }

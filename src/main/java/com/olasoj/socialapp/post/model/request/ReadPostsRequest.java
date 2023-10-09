@@ -15,6 +15,9 @@ public final class ReadPostsRequest implements Serializable {
         this.pagingInfo = pagingInfo;
     }
 
+    public ReadPostsRequest() {
+    }
+
     @Override
     public boolean equals(Object obj) {
         if (this == obj) return true;

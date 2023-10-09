@@ -1,11 +1,13 @@
 package com.olasoj.socialapp.user.repository;
 
 import com.olasoj.socialapp.audit.AuditUtils;
-import com.olasoj.socialapp.user.acl.role.Role;
-import com.olasoj.socialapp.user.model.BlogUser;
+import com.olasoj.socialapp.post.model.PagingInfo;
+import com.olasoj.socialapp.user.model.ReadUsersRequest;
 import com.olasoj.socialapp.user.model.User;
 import com.olasoj.socialapp.user.model.UserAndAccountInfo;
-import com.olasoj.socialapp.util.db.DBTimeUtils;
+import com.olasoj.socialapp.user.model.UserWithPageInfoResult;
+import com.olasoj.socialapp.user.transformer.UserAssembler;
+import io.jsonwebtoken.lang.Assert;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -17,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import static com.olasoj.socialapp.user.repository.JDBCUserRepository.UserAndAccountInfoRowMapper.userAndAccountInfoRowMapper;
@@ -75,6 +78,23 @@ public class JDBCUserRepository implements UserRepository {
 
     @Override
     @Transactional(readOnly = true)
+    public UserWithPageInfoResult findAllUsers(ReadUsersRequest readUsersRequest) {
+
+        Assert.notNull(readUsersRequest, "ReadUsersRequest cannot be null");
+        PagingInfo pagingInfo = readUsersRequest.getPagingInfo();
+        Assert.notNull(pagingInfo, "Paging cannot be null");
+
+        List<Map<String, Object>> query = jdbcOperations.queryForList(
+                fetchAllUsersAndAccountId
+                , pagingInfo.getPageSize() * (pagingInfo.getCurrentPage() - 1)
+                , pagingInfo.getPageSize()
+        );
+
+        return UserAssembler.assemble(query, pagingInfo);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
     public Optional<UserAndAccountInfo> findUserWithAccountId(String userId) {
 
         Optional<UserAndAccountInfo> query = Optional.ofNullable(
@@ -95,29 +115,10 @@ public class JDBCUserRepository implements UserRepository {
 
         static final UserRowMapper userRowMapper = new UserRowMapper();
 
-        public static BlogUser getBlogUser(ResultSet rs) throws SQLException {
-            return BlogUser.builder()
-                    .userId(rs.getLong("user_id"))
-                    .username(rs.getString("username"))
-                    .email(rs.getString("email"))
-                    .password(rs.getString("password"))
-
-                    .createdAt(DBTimeUtils.getInstant(rs, "created_at"))
-                    .updatedAt(DBTimeUtils.getInstant(rs, ("updated_at")))
-                    .createdBy(rs.getString("created_by"))
-                    .updatedBy(rs.getString("updated_by"))
-
-                    .profilePhoto(rs.getString("profile_picture"))
-                    .version(rs.getInt("version"))
-
-                    .accessControlList(List.of(Role.WRITE, Role.READ))
-                    .build();
-        }
-
         public User mapRow(ResultSet rs, int rowNum) throws SQLException {
 
             if (rs.next()) {
-                return getBlogUser(rs);
+                return UserAssembler.assemble(rs);
             }
 
             return null;
@@ -132,7 +133,7 @@ public class JDBCUserRepository implements UserRepository {
         public UserAndAccountInfo mapRow(ResultSet rs, int rowNum) throws SQLException {
 
             if (rs.next()) {
-                User user = UserRowMapper.getBlogUser(rs);
+                User user = UserAssembler.assemble(rs);
                 return new UserAndAccountInfo(user, rs.getLong("social_media_account_id"));
             }
 

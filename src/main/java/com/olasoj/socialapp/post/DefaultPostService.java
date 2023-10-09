@@ -56,10 +56,16 @@ public class DefaultPostService implements PostService {
 
         Post post = getPostInternal(postId);
 
+        checkPermission(blogUserPrincipal, post);
+
         post.setContent(editPostRequest.content());
 
         boolean updatePostContent = postRepository.updatePostContent(post);
         return getGenericPostResult(updatePostContent);
+    }
+
+    private void checkPermission(BlogUserPrincipal blogUserPrincipal, Post post) {
+        if(!post.getSocialMediaAccountId().equals(blogUserPrincipal.accountId()))  throw new ResponseStatusException(HttpStatusCode.valueOf(403), "Cannot edit post");
     }
 
     private Post getPostInternal(Long postId) {
@@ -76,7 +82,9 @@ public class DefaultPostService implements PostService {
 
         Assert.notNull(blogUserPrincipal, BLOG_USER_PRINCIPAL_CANNOT_BE_NULL);
 
-        getPostInternal(postId);
+        Post post = getPostInternal(postId);
+        checkPermission(blogUserPrincipal, post);
+
         boolean deletePost = postRepository.deletePost(postId);
         return getGenericPostResult(deletePost);
     }

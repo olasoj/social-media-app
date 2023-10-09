@@ -43,7 +43,30 @@ public class UserSQLStatements {
                             SMA.social_media_account_id
                             FROM users U
                             INNER JOIN social_media_account SMA ON SMA.user_id = U.user_id
-                        WHERE username = ?;
+                        WHERE username = ?
+                        ORDER BY U.updated_at;
+            """;
+
+    static String fetchAllUsersAndAccountId = """
+                        SELECT
+                            U.user_id,
+                            U.username,
+                            U.email,
+                            U.password,
+                            
+                            U.created_at,
+                            U.updated_at ,
+                            U.created_by,
+                            U.updated_by,
+                            COUNT(*) OVER() AS total_count,
+                            
+                            U.profile_picture,
+                            U.version,
+                            SMA.social_media_account_id
+                            FROM users U
+                            INNER JOIN social_media_account SMA ON SMA.user_id = U.user_id
+                            ORDER BY updated_at DESC
+                        OFFSET (?) ROWS FETCH NEXT ? ROWS ONLY;
             """;
 
     static String fetchNewUserByEmail = """

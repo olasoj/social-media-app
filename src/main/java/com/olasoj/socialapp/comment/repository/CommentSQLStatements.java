@@ -3,8 +3,8 @@ package com.olasoj.socialapp.comment.repository;
 public class CommentSQLStatements {
 
     static String insertNewPost = """
-                INSERT INTO comment (created_by, updated_by, content, like_count, post_id)
-                VALUES (?, ?, ?, ?, ?);
+                INSERT INTO comment (created_by, updated_by, content, like_count, post_id, social_media_account_id)
+                VALUES (?, ?, ?, ?, ?, ?);
             """;
 
     static String fetchPostByPostId = """
@@ -19,6 +19,7 @@ public class CommentSQLStatements {
                             updated_by,
                             
                             post_id,
+                            social_media_account_id,
                             version
                             FROM comment
                         WHERE post_id = ?
@@ -36,6 +37,7 @@ public class CommentSQLStatements {
                             updated_by,
                              COUNT(*) OVER() AS total_count,
                             post_id,
+                            social_media_account_id,
                             version
                             FROM comment P
                         WHERE content = (CASE WHEN ?::text IS NULL THEN P.content ELSE ? END)
@@ -44,7 +46,7 @@ public class CommentSQLStatements {
                         OFFSET (?) ROWS FETCH NEXT ? ROWS ONLY;
             """;
 
-    static String updateCommentByComment_id = """
+    static String updateCommentByCommentId = """
                             UPDATE comment
                             SET content = ?, updated_by =?
                             WHERE comment_id = ?;

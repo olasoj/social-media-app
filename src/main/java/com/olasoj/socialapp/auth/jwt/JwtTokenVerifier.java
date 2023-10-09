@@ -1,13 +1,13 @@
 package com.olasoj.socialapp.auth.jwt;
 
+import com.olasoj.socialapp.auth.AuthService;
 import com.olasoj.socialapp.auth.model.request.AuthenticateViaAccessJWTRequest;
 import com.olasoj.socialapp.auth.model.response.AuthenticateViaAccessJWTResult;
+import com.olasoj.socialapp.util.response.ResponseModel;
 import com.olasoj.socialapp.util.response.model.Response;
 import com.olasoj.socialapp.util.response.model.ResponseError;
 import com.olasoj.socialapp.util.response.transformer.ResponseAssembler;
 import com.olasoj.socialapp.util.response.transformer.ResponseErrorAssembler;
-import com.olasoj.socialapp.auth.AuthService;
-import com.olasoj.socialapp.util.response.ResponseModel;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -52,13 +52,16 @@ public class JwtTokenVerifier extends OncePerRequestFilter {
         MvcRequestMatcher mvcRequestMatcher = new MvcRequestMatcher(handlerMappingIntrospector, "/api/v1/auth/login");
         mvcRequestMatcher.setMethod(HttpMethod.POST);
 
-        MvcRequestMatcher mvcRequestMatcher2 = new MvcRequestMatcher(handlerMappingIntrospector, "/api/v1/post/");
+        MvcRequestMatcher mvcRequestMatcher2 = new MvcRequestMatcher(handlerMappingIntrospector, "/api/v1/post/**");
         mvcRequestMatcher2.setMethod(HttpMethod.GET);
+
+        MvcRequestMatcher mvcRequestMatcher4 = new MvcRequestMatcher(handlerMappingIntrospector, "/api/v1/comment/**");
+        mvcRequestMatcher4.setMethod(HttpMethod.GET);
 
         MvcRequestMatcher mvcRequestMatcher3 = new MvcRequestMatcher(handlerMappingIntrospector, "/api/v1/register/");
         mvcRequestMatcher3.setMethod(HttpMethod.POST);
 
-        requestMatchers = List.of(mvcRequestMatcher, mvcRequestMatcher2, mvcRequestMatcher3);
+        requestMatchers = List.of(mvcRequestMatcher, mvcRequestMatcher2, mvcRequestMatcher3, mvcRequestMatcher4);
     }
 
     @Override

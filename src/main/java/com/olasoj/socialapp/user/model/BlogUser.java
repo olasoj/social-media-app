@@ -57,9 +57,8 @@ public class BlogUser implements User {
         return userId;
     }
 
-    public BlogUser setUserId(Long userId) {
+    public void setUserId(Long userId) {
         this.userId = userId;
-        return this;
     }
 
     @Override
@@ -67,9 +66,8 @@ public class BlogUser implements User {
         return username;
     }
 
-    public BlogUser setUsername(String username) {
+    public void setUsername(String username) {
         this.username = username;
-        return this;
     }
 
     @Override
@@ -77,9 +75,8 @@ public class BlogUser implements User {
         return password;
     }
 
-    public BlogUser setPassword(String password) {
+    public void setPassword(String password) {
         this.password = password;
-        return this;
     }
 
     @Override
@@ -108,9 +105,8 @@ public class BlogUser implements User {
         return accessControlList;
     }
 
-    public BlogUser setAccessControlList(List<AccessControlList> accessControlList) {
+    public void setAccessControlList(List<AccessControlList> accessControlList) {
         this.accessControlList = accessControlList;
-        return this;
     }
 
     @Override

@@ -11,7 +11,6 @@ import com.olasoj.socialapp.user.model.BlogUserPrincipal;
 import com.olasoj.socialapp.util.response.model.Response;
 import com.olasoj.socialapp.util.response.transformer.ResponseAssembler;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotNull;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -50,7 +49,7 @@ public class PostInboundRestController {
 
 
     @GetMapping(path = "/")
-    public ResponseEntity<Response<ReadPostsResult>> readAllPosts(@NotNull ReadPostsRequest readPostsRequest) {
+    public ResponseEntity<Response<ReadPostsResult>> readAllPosts(@RequestBody ReadPostsRequest readPostsRequest) {
         ReadPostsResult readPostsResult = postService.readAllPosts(readPostsRequest);
         Response<ReadPostsResult> response = ResponseAssembler.toResponse(HttpStatus.OK, readPostsResult);
 

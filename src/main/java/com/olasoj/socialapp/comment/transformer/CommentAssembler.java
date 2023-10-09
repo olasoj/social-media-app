@@ -54,6 +54,7 @@ public class CommentAssembler {
                 .updatedBy((String) mapItem.get("updated_by"))
 
                 .postId((Long) mapItem.get("post_id"))
+                .socialMediaAccountId((Long) mapItem.get("social_media_account_id"))
                 .version((Integer) mapItem.get("version"))
 
                 .build();
@@ -76,6 +77,7 @@ public class CommentAssembler {
                     .updatedBy(rs.getString("updated_by"))
 
                     .postId(rs.getLong("post_id"))
+                    .socialMediaAccountId(rs.getLong("social_media_account_id"))
                     .version(rs.getInt("version"))
 
                     .build();

@@ -1,0 +1,1 @@
+ALTER TABLE comment ALTER COLUMN social_media_account_id DROP DEFAULT;

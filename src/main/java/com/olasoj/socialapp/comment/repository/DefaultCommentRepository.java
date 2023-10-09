@@ -42,7 +42,8 @@ public class DefaultCommentRepository implements CommentRepository {
                 comment.getUpdatedBy(),
                 comment.getContent(),
                 comment.getLikeCount(),
-                comment.getPostId()
+                comment.getPostId(),
+                comment.getSocialMediaAccountId()
         );
         return update == 1;
     }
@@ -93,7 +94,7 @@ public class DefaultCommentRepository implements CommentRepository {
         AuditUtils.onUpdate(comment);
 
         int update = jdbcOperations.update(
-                updateCommentByComment_id,
+                updateCommentByCommentId,
                 comment.getContent(),
                 comment.getUpdatedBy(),
                 comment.getPostId()

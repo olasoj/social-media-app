@@ -11,7 +11,6 @@ import com.olasoj.socialapp.user.model.BlogUserPrincipal;
 import com.olasoj.socialapp.util.response.model.Response;
 import com.olasoj.socialapp.util.response.transformer.ResponseAssembler;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotNull;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -50,7 +49,7 @@ public class CommentInboundRestController {
 
 
     @GetMapping(path = "/by-post/{postId}")
-    public ResponseEntity<Response<ReadCommentsResult>> readAllComments(@PathVariable(value = "postId") Long postId, @NotNull ReadCommentsRequest readCommentsRequest) {
+    public ResponseEntity<Response<ReadCommentsResult>> readAllComments(@PathVariable(value = "postId") Long postId, @RequestBody ReadCommentsRequest readCommentsRequest) {
         ReadCommentsResult readCommentsResult = commentService.readAllCommentsByPostId(postId, readCommentsRequest);
         Response<ReadCommentsResult> response = ResponseAssembler.toResponse(HttpStatus.OK, readCommentsResult);
 

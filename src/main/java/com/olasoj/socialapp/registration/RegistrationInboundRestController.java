@@ -2,7 +2,9 @@ package com.olasoj.socialapp.registration;
 
 import com.olasoj.socialapp.follow.service.FollowRelationshipService;
 import com.olasoj.socialapp.user.UserService;
+import com.olasoj.socialapp.user.model.BlogUser;
 import com.olasoj.socialapp.user.model.BlogUserPrincipal;
+import com.olasoj.socialapp.user.model.BlogUserView;
 import com.olasoj.socialapp.user.model.UserAndAccountInfo;
 import com.olasoj.socialapp.util.response.model.Response;
 import com.olasoj.socialapp.util.response.transformer.ResponseAssembler;
@@ -45,7 +47,7 @@ public class RegistrationInboundRestController {
         Map<String, Object> result = new HashMap<>();
         UserAndAccountInfo userWithAccountInfo = userService.getUserWithAccountInfo(blogUserPrincipal.getUsername());
 
-        result.put("user", userWithAccountInfo.getUser());
+        result.put("user", new BlogUserView((BlogUser) userWithAccountInfo.getUser()));
         result.put("followers", followRelationshipService.getAllFollowers(userWithAccountInfo.getSocialAccountId()));
         result.put("following", followRelationshipService.getAllFollowing(userWithAccountInfo.getSocialAccountId()));
 

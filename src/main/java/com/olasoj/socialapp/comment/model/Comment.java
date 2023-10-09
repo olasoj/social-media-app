@@ -9,6 +9,7 @@ import java.util.StringJoiner;
 public class Comment implements AuditObject {
 
     private Long commentId;
+    private Long socialMediaAccountId;
     private String content;
 
     private Integer likeCount;
@@ -31,6 +32,7 @@ public class Comment implements AuditObject {
         this.createdBy = commentBuilder.createdBy;
         this.version = commentBuilder.version;
         this.postId = commentBuilder.postId;
+        this.socialMediaAccountId = commentBuilder.socialMediaAccountId;
     }
 
     public static CommentBuilder builder() {
@@ -79,6 +81,14 @@ public class Comment implements AuditObject {
 
     public Integer getVersion() {
         return version;
+    }
+
+    public Long getSocialMediaAccountId() {
+        return socialMediaAccountId;
+    }
+
+    public void setSocialMediaAccountId(Long socialMediaAccountId) {
+        this.socialMediaAccountId = socialMediaAccountId;
     }
 
     public void setVersion(Integer version) {
@@ -159,6 +169,7 @@ public class Comment implements AuditObject {
         private String createdBy;
         private Integer version;
         private Long postId;
+        private Long socialMediaAccountId;
 
         public CommentBuilder commentId(Long postId) {
             this.commentId = postId;
@@ -202,6 +213,11 @@ public class Comment implements AuditObject {
 
         public CommentBuilder postId(Long socialMediaAccountId) {
             this.postId = socialMediaAccountId;
+            return this;
+        }
+
+        public CommentBuilder socialMediaAccountId(Long socialMediaAccountId) {
+            this.socialMediaAccountId = socialMediaAccountId;
             return this;
         }
 

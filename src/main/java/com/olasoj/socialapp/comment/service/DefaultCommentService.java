@@ -1,10 +1,6 @@
 package com.olasoj.socialapp.comment.service;
 
-import com.olasoj.socialapp.comment.model.Comment;
-import com.olasoj.socialapp.comment.model.GenericCommentResult;
-import com.olasoj.socialapp.comment.model.ReadCommentResult;
-import com.olasoj.socialapp.comment.model.ReadCommentsRequest;
-import com.olasoj.socialapp.comment.model.ReadCommentsResult;
+import com.olasoj.socialapp.comment.model.*;
 import com.olasoj.socialapp.comment.model.request.CreateCommentRequest;
 import com.olasoj.socialapp.comment.model.request.EditCommentRequest;
 import com.olasoj.socialapp.comment.repository.CommentRepository;
@@ -35,6 +31,7 @@ public class DefaultCommentService implements CommentService {
                 .content(createCommentRequest.content())
                 .likeCount(0)
                 .postId(postId)
+                .socialMediaAccountId(blogUserPrincipal.accountId())
                 .build();
 
         boolean saveBlogPost = commentRepository.saveComment(post);

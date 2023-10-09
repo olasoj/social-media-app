@@ -2,5 +2,5 @@ package com.olasoj.socialapp.follow.repository;
 
 public enum FollowStatus {
 
-    ACCEPTED, EJECTED, CANCEL, PENDING
+    ACCEPTED, REJECTED, CANCEL, PENDING
 }
