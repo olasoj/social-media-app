@@ -2,7 +2,7 @@
 
 # Blog App Application
 
-A Blog Web Application that simulates the day-to-day operations of a post.
+A Social Web API that simulates the day-to-day operations of a social media.
 
 ## Authors
 
