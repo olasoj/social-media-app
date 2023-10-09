@@ -35,7 +35,7 @@ public class PersistenceConfig {
     public HikariDataSource sqlDataSource() {
 
         HikariConfig config = new HikariConfig();
-        config.setJdbcUrl("jdbc:postgresql://localhost:5432/social_media?useEncoding=true&amp;characterEncoding=UTF-8");
+        config.setJdbcUrl("jdbc:postgresql://postgres:5432/social_media?useEncoding=true&amp;characterEncoding=UTF-8");
         config.setUsername("olasoj");
         config.setPassword("P@ssw0rd");
 
@@ -44,7 +44,6 @@ public class PersistenceConfig {
         config.setMaximumPoolSize(Runtime.getRuntime().availableProcessors());
         config.setTransactionIsolation("TRANSACTION_READ_COMMITTED");
 
-        //
         config.addDataSourceProperty("cachePrepStmts", "true");
         config.addDataSourceProperty("prepStmtCacheSize", "250");
         config.addDataSourceProperty("prepStmtCacheSqlLimit", "2048");

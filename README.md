@@ -15,23 +15,21 @@ Olasoji Ige works at Paga as a software engineer. He holds a Bachelor of Science
 
 **The following functionalities are available in this application:**
 
-- Users can read post post list without authentication.
+- Users can read post/comment list without authentication.
 
-- Users can sign up to create post post.
+- Users can sign up to create post/comment.
 
-- Users can log in to create a post post.
+- Users can log in to create a post/comment.
 
-- Users can log in to edit a post post if they are the authors of the post.
+- Users can log in to edit a post/comment if they are the authors of the post/comment.
 
-- Users can log in to delete a post post if they are the authors of the post.
-
-- Users can create an account and receive a unique account id after signing up. When registering, the user must provide an account name that does not already exist on the platform.
+- Users can create an account and receive a unique account id after signing up. When registering, the user must provide a username and email that does not already exist on the platform.
 
 - The username and password are used to authenticate the user, which results in the user receiving an access token if successful.
 
-- Except for reading post post, login and registration, every request must have a valid access token.
+- Except for reading post(s) comment(s), login and registration, every request must have a valid access token.
 
-- This system was built using the spring-boot framework with spring security, without a database, and following the best principles in software engineering.
+- This system was built using the spring-boot framework with spring security, without Postgres database, and following the best principles in software engineering.
 
 ## Environment Variables
 
@@ -42,28 +40,29 @@ This project made no use of environmental variables.
 Clone the project
 
 ```bash
-   git clone -b main https://github.com/olasoj/simple-post-app.git
+   git clone -b main https://github.com/olasoj/social-media-app.git
 ```
 
 Go to the project directory
 
 ```bash
-  cd simple-post-app
+  cd social-media-app
 ```
 
-Start the simple-post-app
+Start the social-media-app
 
 ```bash
-    ./gradlew bootRun
+   docker-compose up -d --build
 ```
 
 ## Documentation
 
-[Documentation](https://post-post-api-doc.surge.sh/)
-- Check the resources/docs folder for other documentation
+[Documentation](https://documenter.getpostman.com/view/7357801/2s9YJhvKRL)
 
 ## Tech Stack
 
 **Client:** Postman
 
 **Server:** Java, Spring boot
+
+**Server:** Postgres

@@ -9,9 +9,11 @@ services:
       - "5434:5432"
     environment:
       POSTGRES_USER: olasoj
-      POSTGRES_PASSWORD: "P@ssw0rd"
+      POSTGRES_PASSWORD: P@ssw0rd
+      POSTGRES_DB : social_media
     volumes:
       - ./postgres-data:/var/lib/postgresql/data
+#      - ./init-database.sh:/docker-entrypoint-initdb.d/init-database.sh
     #      - ~/.docker-conf/postgres/log/:/var/log/postgres
 
     networks:
@@ -20,7 +22,7 @@ services:
   app:
     build: ./
     ports:
-      - "8081:8080"
+      - "8000:8000"
     depends_on:
       - postgres
     networks:
