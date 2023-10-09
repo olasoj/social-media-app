@@ -1,4 +1,4 @@
-![Logo](https://i.postimg.cc/Prh7tGGn/simple-banking-app-logo.jpg)
+![Logo](er.png "ER diagram")
 
 # Social Media API
 
