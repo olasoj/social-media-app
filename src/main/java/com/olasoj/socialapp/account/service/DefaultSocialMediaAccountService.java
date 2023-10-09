@@ -38,7 +38,7 @@ public class DefaultSocialMediaAccountService implements SocialMediaAccountServi
         socialMediaAccountRepository
                 .findSocialMediaAccountById(socialAccountId)
                 .orElseThrow(() -> {
-                    throw new ResponseStatusException(HttpStatusCode.valueOf(409), "User already has an account");
+                    throw new ResponseStatusException(HttpStatusCode.valueOf(404), "Account not found");
                 });
     }
 
@@ -46,7 +46,7 @@ public class DefaultSocialMediaAccountService implements SocialMediaAccountServi
         socialMediaAccountRepository
                 .findSocialMediaAccountByUserId(user.getUserId())
                 .ifPresent(u -> {
-                    throw new ResponseStatusException(HttpStatusCode.valueOf(409), "User already has an account");
+                    throw new ResponseStatusException(HttpStatusCode.valueOf(404), "Account not found");
                 });
     }
 

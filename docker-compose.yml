@@ -1,0 +1,31 @@
+
+
+version: '3'
+services:
+
+  postgres:
+    image: postgres:11-alpine
+    ports:
+      - "5434:5432"
+    environment:
+      POSTGRES_USER: olasoj
+      POSTGRES_PASSWORD: "P@ssw0rd"
+    volumes:
+      - ./postgres-data:/var/lib/postgresql/data
+    #      - ~/.docker-conf/postgres/log/:/var/log/postgres
+
+    networks:
+      - gen-rou
+
+  app:
+    build: ./
+    ports:
+      - "8081:8080"
+    depends_on:
+      - postgres
+    networks:
+      - gen-rou
+
+networks:
+  gen-rou:
+    driver: bridge

@@ -2,9 +2,13 @@ plugins {
 	id 'java'
 	id 'org.springframework.boot' version '3.0.6'
 	id 'io.spring.dependency-management' version '1.1.0'
+//	id 'maven'
 }
+//apply plugin: 'maven'
+apply plugin: 'maven-publish'
 
-group = 'com.primebank'
+
+group = 'com.olasoj'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '17'
 
@@ -43,4 +47,19 @@ dependencies {
 
 tasks.named('test') {
 	useJUnitPlatform()
+}
+
+publishing {
+	publications {
+		customLibrary(MavenPublication) {
+			from components.java
+		}
+	}
+
+	repositories {
+		maven {
+			name = 'sampleRepo'
+			url = layout.buildDirectory.dir("repo")
+		}
+	}
 }

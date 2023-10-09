@@ -59,7 +59,7 @@ public class DefaultSocialMediaAccountRepository implements SocialMediaAccountRe
         return Optional.ofNullable(
                 jdbcOperations.query(
                         """
-                                SELECT social_media_account_id FROM social_media_account WHERE social_media_account_id = ?  
+                                SELECT * FROM social_media_account WHERE social_media_account_id = ?  
                                 """
                         , rs -> {
                             return SocialMediaAccountRowMapper.socialMediaAccountRowMapper.mapRow(rs, rs.getRow());

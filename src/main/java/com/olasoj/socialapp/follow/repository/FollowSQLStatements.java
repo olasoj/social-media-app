@@ -4,7 +4,7 @@ public class FollowSQLStatements {
 
     static String insertNewPost = """
                 INSERT INTO follows (created_by, updated_by, follow_status, follow_social_media_account_id, social_media_account_id)
-                VALUES (?, ?, ?, ?, ?);
+                VALUES (?, ?, ?::follow_status, ?, ?);
             """;
 
     static String fetchUniqueFollowRelationshipByFollowSID = """

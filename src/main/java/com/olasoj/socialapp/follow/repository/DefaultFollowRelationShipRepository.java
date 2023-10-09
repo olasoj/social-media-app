@@ -33,6 +33,7 @@ public class DefaultFollowRelationShipRepository implements FollowRepository {
                 insertNewPost,
                 AuditUtils.getUsername(),
                 AuditUtils.getUsername(),
+                FollowStatus.ACCEPTED.name(),
                 followAccount,
                 ownerAccount
         );
