@@ -1,6 +1,6 @@
 ![Logo](https://i.postimg.cc/Prh7tGGn/simple-banking-app-logo.jpg)
 
-# Blog App Application
+# Social Media API
 
 A Social Web API that simulates the day-to-day operations of a social media.
 
